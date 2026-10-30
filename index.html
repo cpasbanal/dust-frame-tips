@@ -1,0 +1,302 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Frames That Stay Put</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column; the frame (structure) is drawn in ink, the data in amber, everywhere. */
+:root{
+  --bg:#F3F5F4; --surface:#FFFFFF; --ink:#13201C; --muted:#56635E; --line:#D5DDD9;
+  --pine:#1D6A57; --pine-soft:#E1EFEA; --amber:#C98A0E; --amber-soft:#FBF0D6;
+  --bad:#B4432E; --bad-soft:#F8E4DF; --code-bg:#13201C; --code-fg:#E6EEEA;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1614; --surface:#17211E; --ink:#E7EEEB; --muted:#9AA9A3; --line:#2B3833;
+  --pine:#5CC2A5; --pine-soft:#1A2F29; --amber:#F0B640; --amber-soft:#2F2614;
+  --bad:#F08A73; --bad-soft:#331C17; --code-bg:#0A100E; --code-fg:#DDE7E3; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F1614; --surface:#17211E; --ink:#E7EEEB; --muted:#9AA9A3; --line:#2B3833;
+  --pine:#5CC2A5; --pine-soft:#1A2F29; --amber:#F0B640; --amber-soft:#2F2614;
+  --bad:#F08A73; --bad-soft:#331C17; --code-bg:#0A100E; --code-fg:#DDE7E3; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:760px;margin:0 auto;padding-block:48px 72px;display:flex;flex-direction:column;gap:64px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
+h1{font-size:clamp(2.2rem,6vw,3.5rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2rem);font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--pine);font-weight:600}
+.lede{font-size:1.2rem;color:var(--muted);max-width:60ch}
+section{display:flex;flex-direction:column;gap:20px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.data{color:var(--amber);}
+.frame-word{color:var(--pine)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--pine-soft);padding:1px 6px;border-radius:4px}
+a{color:var(--pine)}
+
+/* hero */
+header{display:flex;flex-direction:column;gap:20px}
+.rule{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.chip{font-family:var(--f-mono);font-size:.8rem;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface)}
+.chip b{font-weight:600}
+.chip.f{border-color:var(--pine);color:var(--pine)}
+.chip.d{border-color:var(--amber);color:var(--amber)}
+
+/* before / after */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.compare{grid-template-columns:1fr}}
+.case{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.case h3{display:flex;align-items:center;gap:8px}
+.tag{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:4px;font-weight:600}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+.tag.good{background:var(--pine-soft);color:var(--pine)}
+.runs{display:flex;gap:8px}
+.mini{flex:1;aspect-ratio:3/4;border-radius:6px;border:1.5px solid var(--line);padding:6px;display:flex;flex-direction:column;gap:4px;max-width:100%}
+.mini span{display:block;border-radius:2px}
+.mini .hd{height:10%;background:var(--pine);opacity:.85}
+.mini .bar{background:var(--amber)}
+.mini .blk{background:var(--line)}
+.caption{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);text-align:center}
+.case ul{margin:0;padding-left:1.1em;color:var(--muted);font-size:.95rem}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:0;counter-reset:s}
+.step{display:grid;grid-template-columns:56px 1fr;gap:18px;padding-block:22px;border-top:1px solid var(--line)}
+.step:last-child{border-bottom:1px solid var(--line)}
+.num{font-family:var(--f-display);font-weight:800;font-size:2.4rem;line-height:1;color:var(--pine)}
+.step .stack{min-width:0}
+.where{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.step ul{margin:0;padding-left:1.1em}
+.step li{margin-block:4px}
+
+/* prompt */
+.prompt{background:var(--code-bg);color:var(--code-fg);border-radius:10px;overflow:hidden}
+.prompt-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.prompt-bar span{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.prompt pre{margin:0;padding:18px 16px;font-family:var(--f-mono);font-size:.84rem;line-height:1.65;white-space:pre-wrap;overflow-x:auto}
+.prompt .ph{color:#F0B640}
+.prompt .em{color:#7FD8BD;font-weight:600}
+button.copy{font-family:var(--f-mono);font-size:.78rem;font-weight:600;background:#F0B640;color:#13201C;border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
+button.copy:focus-visible{outline:2px solid #7FD8BD;outline-offset:2px}
+
+/* table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+thead th{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+th.win{color:var(--pine)}
+td:first-child{font-weight:600;white-space:nowrap}
+
+/* habits */
+.habits{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.habits{grid-template-columns:1fr}}
+.habit{padding:18px 0;border-top:2px solid var(--ink);display:flex;flex-direction:column;gap:8px;min-width:0}
+.habit p{color:var(--muted)}
+
+/* checklist */
+.check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.check li{display:flex;gap:12px;align-items:flex-start}
+.check input{width:20px;height:20px;margin-top:3px;accent-color:var(--pine);flex:none}
+.check label{cursor:pointer}
+
+footer{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);border-top:1px solid var(--line);padding-top:20px;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+@media (prefers-reduced-motion:no-preference){button.copy{transition:transform .12s}button.copy:active{transform:scale(.96)}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Dust tips · Frames &amp; dashboards</div>
+  <h1>Build the <span class="frame-word">frame</span> once.<br>Let an agent refresh the <span class="data">data</span>.</h1>
+  <p class="lede">If your scheduled agent builds the whole dashboard on every run, it redesigns it every time. Split the work: design the frame in a conversation, then give a small agent one job, which is updating the numbers inside it.</p>
+  <div class="rule">
+    <span class="chip f"><b>Frame</b> = structure · built once, by you</span>
+    <span class="chip d"><b>Data</b> = values · refreshed by the agent</span>
+  </div>
+</header>
+
+<section>
+  <div class="eyebrow">The problem</div>
+  <h2>One agent doing everything reinvents the dashboard</h2>
+  <div class="compare">
+    <div class="case">
+      <h3><span class="tag bad">Avoid</span> All-in-one agent</h3>
+      <div class="runs" aria-hidden="true">
+        <div class="mini"><span class="hd"></span><span class="bar" style="height:30%;width:70%"></span><span class="blk" style="height:20%"></span><span class="bar" style="height:20%;width:40%"></span></div>
+        <div class="mini"><span class="blk" style="height:25%"></span><span class="hd"></span><span class="bar" style="height:15%;width:90%"></span><span class="bar" style="height:35%;width:55%"></span></div>
+        <div class="mini"><span class="bar" style="height:45%;width:100%"></span><span class="blk" style="height:12%;width:60%"></span><span class="hd"></span></div>
+      </div>
+      <div class="caption">Monday · Tuesday · Wednesday</div>
+      <ul>
+        <li>Layout, charts and labels change from run to run</li>
+        <li>Every run burns tokens redesigning instead of updating</li>
+        <li>Nobody can bookmark or compare a stable view</li>
+      </ul>
+    </div>
+    <div class="case">
+      <h3><span class="tag good">Do</span> Frame + refresh agent</h3>
+      <div class="runs" aria-hidden="true">
+        <div class="mini"><span class="hd"></span><span class="bar" style="height:30%;width:60%"></span><span class="blk" style="height:18%"></span><span class="bar" style="height:18%;width:40%"></span></div>
+        <div class="mini"><span class="hd"></span><span class="bar" style="height:30%;width:75%"></span><span class="blk" style="height:18%"></span><span class="bar" style="height:18%;width:52%"></span></div>
+        <div class="mini"><span class="hd"></span><span class="bar" style="height:30%;width:68%"></span><span class="blk" style="height:18%"></span><span class="bar" style="height:18%;width:63%"></span></div>
+      </div>
+      <div class="caption">Monday · Tuesday · Wednesday</div>
+      <ul>
+        <li>Same layout every time; only the numbers move</li>
+        <li>Short, cheap runs with a narrow job</li>
+        <li>One URL the whole team can trust</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">The method</div>
+  <h2>Three steps, in this order</h2>
+  <p class="lede" style="font-size:1.05rem">Example used below: a weekly team KPI dashboard.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <div class="stack">
+        <h3>Get the data right in a conversation</h3>
+        <div class="where">Where: a normal Dust conversation</div>
+        <ul>
+          <li>Start small. Ask for 2–3 sources or KPIs and have the agent return them as a <b>table in the conversation</b>.</li>
+          <li>Check the numbers are correct before you think about design.</li>
+          <li>Note exactly where each value comes from. The refresh agent will need it.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div class="stack">
+        <h3>Design the frame in a separate conversation</h3>
+        <div class="where">Where: a new conversation dedicated to the frame</div>
+        <ul>
+          <li>Paste the table and ask for a Dust frame (dashboard) that shows it the way you want.</li>
+          <li>Iterate on layout, charts, labels and colors until you are happy. This is the only place the design changes.</li>
+          <li>Copy the <b>frame URL</b>. That URL is the contract with your agent.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div class="stack">
+        <h3>Create a refresh agent and give it a schedule trigger</h3>
+        <div class="where">Where: Agent Builder → instructions, then Triggers → Add triggers → Schedule</div>
+        <ul>
+          <li>Paste the frame URL into the agent's instructions and say <b>explicitly</b> that it must update data only, never the structure. Template below.</li>
+          <li>Give it only the tools and data sources it needs to fetch the values.</li>
+          <li>Add a <b>Schedule trigger</b> in plain language (e.g. "every Monday at 8 AM, Paris time"), check the confirmed schedule, then save the agent.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Copy this</div>
+  <h2>Refresh agent instructions</h2>
+  <p>Replace the amber parts. Keep the "do not change" lines: they are what stops the agent from redesigning your frame.</p>
+  <div class="prompt">
+    <div class="prompt-bar"><span>Agent instructions</span><button class="copy" id="copy-btn" type="button">Copy</button></div>
+<pre id="prompt-text">You keep an existing Dust frame up to date. You never redesign it.
+
+Frame to update: <span class="ph">[paste the frame URL]</span>
+
+On every run:
+1. Fetch the latest values from <span class="ph">[your sources: table, data source, websites…]</span>.
+2. Open the frame above and replace <span class="em">only the data</span>: numbers, table rows, dates and the "last updated" stamp.
+3. <span class="em">Do not change the structure</span>: keep the layout, sections, charts, labels, colors and code exactly as they are.
+4. <span class="em">Do not create a new frame.</span> Always edit the one at the URL above.
+5. If the new data no longer fits the frame (new column, missing source, broken value), stop and explain the problem in the conversation instead of changing the frame.
+6. End with a 3-line summary: what changed since the last run, and anything missing.</pre>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Why a trigger</div>
+  <h2>Use a trigger, not a wake-up</h2>
+  <p>A wake-up is something an agent schedules for itself when you ask it in a conversation to "do this every week". A trigger is a schedule you set on the agent. For a dashboard refresh, you want the trigger.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th></th><th class="win">Schedule trigger</th><th>Wake-up</th></tr></thead>
+      <tbody>
+        <tr><td>Who sets it</td><td>You, in Agent Builder → Triggers</td><td>The agent, from inside a conversation</td></tr>
+        <tr><td>Where you see it</td><td>On the agent, with the confirmed schedule; enable, disable or delete it anytime</td><td>Hidden in the conversation that created it</td></tr>
+        <tr><td>Instructions used</td><td>The agent's own instructions, which you edited to protect the frame</td><td>Whatever context that conversation had, including the redesign history</td></tr>
+        <tr><td>Lifetime</td><td>Runs until you stop it</td><td>Schedule-based wake-ups stop after 32 runs</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Good habits</div>
+  <h2>Keep it light and shared</h2>
+  <div class="habits">
+    <div class="habit">
+      <h3>Don't send it by email</h3>
+      <p>Emailing the result costs tokens and adds little. Come back to Dust and open the frame: it is always the latest version.</p>
+    </div>
+    <div class="habit">
+      <h3>Pin the frame to a Pod</h3>
+      <p>Work on the dashboard together in a Pod and pin the frame there, so the team finds the one current view without searching.</p>
+    </div>
+    <div class="habit">
+      <h3>Change the design on purpose</h3>
+      <p>Need a new chart? Go back to the frame conversation (step 2), change it there, and keep the same URL.</p>
+    </div>
+    <div class="habit">
+      <h3>Read the run summary</h3>
+      <p>Trigger runs show up as conversations. Skim the 3-line summary to spot a missing source before it shows on the dashboard.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Before you switch it on</div>
+  <h2>Checklist</h2>
+  <ul class="check">
+    <li><input type="checkbox" id="c1"><label for="c1">The data was checked as a plain table first</label></li>
+    <li><input type="checkbox" id="c2"><label for="c2">The frame was designed in its own conversation and I like it</label></li>
+    <li><input type="checkbox" id="c3"><label for="c3">The frame URL is in the agent's instructions</label></li>
+    <li><input type="checkbox" id="c4"><label for="c4">The instructions say "update data only, don't change the structure, don't create a new frame"</label></li>
+    <li><input type="checkbox" id="c5"><label for="c5">A Schedule trigger is set, and its confirmed time looks right</label></li>
+    <li><input type="checkbox" id="c6"><label for="c6">No email step; the frame is pinned where the team works</label></li>
+  </ul>
+</section>
+
+<footer>
+  <span>Dust tips · Aramis Group</span>
+  <span>Trigger &amp; wake-up details: <a href="https://docs.dust.tt/docs/user-documentation/agents/triggers" target="_blank" rel="noopener">Dust docs</a></span>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var btn=document.getElementById('copy-btn'), pre=document.getElementById('prompt-text');
+  btn.addEventListener('click',function(){
+    var t=pre.innerText;
+    function done(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1600)}
+    function fallback(){var r=document.createRange();r.selectNodeContents(pre);var s=window.getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected, press Ctrl+C'}
+    try{navigator.clipboard.writeText(t).then(done,fallback)}catch(e){fallback()}
+  });
+  var boxes=document.querySelectorAll('.check input');
+  boxes.forEach(function(b){
+    try{b.checked=localStorage.getItem('dust-frame-'+b.id)==='1'}catch(e){}
+    b.addEventListener('change',function(){try{localStorage.setItem('dust-frame-'+b.id,b.checked?'1':'0')}catch(e){}});
+  });
+})();
+</script>
+
+</body></html>
